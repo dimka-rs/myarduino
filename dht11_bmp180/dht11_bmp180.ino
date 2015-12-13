@@ -11,10 +11,10 @@ long Temperature = 0, Pressure = 0, Altitude = 0;
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("DHT11 TEST PROGRAM ");
-  Serial.print("LIBRARY VERSION: ");
-  Serial.println(DHT11LIB_VERSION);
-  Serial.println();
+//  Serial.println("DHT11 TEST PROGRAM ");
+//  Serial.print("LIBRARY VERSION: ");
+//  Serial.println(DHT11LIB_VERSION);
+//  Serial.println();
   
   Wire.begin(); 
   delay(1000);
@@ -56,6 +56,6 @@ void loop()
   Serial.print(" ");
   Serial.println((long)Altitude);
 
-  delay(6000);
+  delay(60000);
 }
 
