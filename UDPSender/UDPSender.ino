@@ -17,10 +17,11 @@ void setup() {
   //void begin(const uint8_t* mac, IPAddress ip, IPAddress dns, IPAddress gateway, IPAddress subnet);
   Ethernet.begin(mac, localip);
   Serial.begin(9600);
+  Serial.println("start");
 }
 
 void loop() {
-    sprintf(Reply, "%010lu\n", millis());
+    sprintf(Reply, "%010lu", millis());
     Udp.beginPacket(remoteip, remotePort);
     Udp.write(Reply);
     Udp.endPacket();
