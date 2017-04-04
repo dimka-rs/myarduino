@@ -9,21 +9,29 @@ sock.bind((UDP_IP, UDP_PORT))
 
 print "start"
 weight = []
-i = 1
+i = 0
+wmin=0
+wmax=0
 
 while True:
     data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-    #print "received message:", data
-    if i <= 10:
+    m=int(data[0:9])
+    w=int(data[10:19])
+    if w < wmin or wmin == 0:
+        wmin = w
+    if w > wmax or wmax == 0:
+        wmax = w
+    #print "m=",m,", w=",w
+    if i < 10:
         #print "i: ", i
-        weight.append(int(data))
+        weight.append(w)
         i = i + 1
     else:
         avg = 0
         for w in weight:
             avg = avg + w
         avg = avg / 10
-        print "average: ", avg
+        print "time=",m,"average=",avg,"min=",wmin,"max=",wmax,"delta=",wmax-wmin
         weight = []
         i = 0
 
