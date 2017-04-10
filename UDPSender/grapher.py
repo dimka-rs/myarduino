@@ -30,7 +30,7 @@ pg.setConfigOptions(antialias=True)
 p = win.addPlot(title="Updating plot")
 wraw = p.plot(pen='w')
 wmin = p.plot(pen='g')
-wavg = p.plot(pen='b')
+wavg = p.plot(pen='y')
 wmax = p.plot(pen='r')
 
 
@@ -38,7 +38,7 @@ def recv():
     global x, y, mn, av, mx
     data, addr  = sock.recvfrom(1024) # buffer size is 1024 bytes
     m=int(data[0:9])
-    w=int(data[10:19])
+    w=int(data[10:19])/10
     x=np.append(x, m)
     y=np.append(y, w)
     if len(mn)==0 or w < mn[-1]:
@@ -49,11 +49,23 @@ def recv():
  	mx=np.append(mx, w)
     else:
         mx=np.append(mx, mx[-1])
+
+    avgd=10
+    if len(y) < avgd:
+	av=np.append(av, w)
+    else:
+        avg=0
+        for i in range(-1, -1*avgd-1, -1):
+            avg=avg+y[i]
+        avg=avg/avgd
+        av=np.append(av, avg)
+
 #    l=len(x)
 #    print("x:"+str(m)+",y:"+str(w)+",mn:"+str(mn[-1])+",L:"+str(l))
     wraw.setData(x, y)
     wmin.setData(x, mn)
     wmax.setData(x, mx)
+    wavg.setData(x, av)
 
 tmr = QtCore.QTimer()
 tmr.timeout.connect(recv)
