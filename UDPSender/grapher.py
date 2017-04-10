@@ -14,7 +14,8 @@ print "start"
 x = np.array([])
 y = np.array([])
 mn = np.array([])
-av = np.array([])
+av1 = np.array([])
+av2 = np.array([])
 mx = np.array([])
 
 ## graph
@@ -28,48 +29,68 @@ win.resize(1000,600)
 win.setWindowTitle('pyqtgraph example: Plotting')
 pg.setConfigOptions(antialias=True)
 p = win.addPlot(title="Updating plot")
-wraw = p.plot(pen='w')
+wraw = p.plot(pen='b')
 wmin = p.plot(pen='g')
-wavg = p.plot(pen='y')
+wav1 = p.plot(pen='y')
+wav2 = p.plot(pen='w')
 wmax = p.plot(pen='r')
 
 
 def recv():
-    global x, y, mn, av, mx
+    global x, y, mn, av1, av2, mx
     data, addr  = sock.recvfrom(1024) # buffer size is 1024 bytes
     m=int(data[0:9])
-    w=int(data[10:19])/10
+    w=int(data[10:19])
     x=np.append(x, m)
     y=np.append(y, w)
-    if len(mn)==0 or w < mn[-1]:
+    av1d=10
+    av2d=100
+    if len(y) < av1d:
         mn=np.append(mn, w)
+        mx=np.append(mx, w)
+        av1=np.append(av1, w)
     else:
-        mn=np.append(mn, mn[-1])
-    if len(mx)==0 or w > mx[-1]:
- 	mx=np.append(mx, w)
-    else:
-        mx=np.append(mx, mx[-1])
+	av1t=0
+        mnt=y[-1]
+        mxt=y[-1]
+        for i in range(-1, -1*av1d-1, -1):
+            av1t=av1t+y[i]
+            if y[i] < mnt:
+                mnt=y[i]
+            if y[i] > mxt:
+                mxt=y[i]
 
-    avgd=10
-    if len(y) < avgd:
-	av=np.append(av, w)
-    else:
-        avg=0
-        for i in range(-1, -1*avgd-1, -1):
-            avg=avg+y[i]
-        avg=avg/avgd
-        av=np.append(av, avg)
+        av1t=round(av1t/av1d)
+        av1=np.append(av1, av1t)
+        mn=np.append(mn, mnt)
+        mx=np.append(mx, mxt)
 
-#    l=len(x)
-#    print("x:"+str(m)+",y:"+str(w)+",mn:"+str(mn[-1])+",L:"+str(l))
+    if len(y) < av2d:
+        av2=np.append(av2, w)
+    else:
+        av2t=0
+        for i in range(-1, -1*av2d-1, -1):
+            av2t=av2t+y[i]
+        av2t=round(av2t/av2d)
+        av2=np.append(av2, av2t)
+## limit graph length
+    if len(y) > 300:
+       x=np.delete(x, 0)
+       y=np.delete(y, 0)
+       mn=np.delete(mn, 0)
+       mx=np.delete(mx, 0)
+       av1=np.delete(av1, 0)
+       av2=np.delete(av2, 0)
+
     wraw.setData(x, y)
     wmin.setData(x, mn)
     wmax.setData(x, mx)
-    wavg.setData(x, av)
+    wav1.setData(x, av1)
+    wav2.setData(x, av2)
 
 tmr = QtCore.QTimer()
 tmr.timeout.connect(recv)
-tmr.start(50)
+tmr.start(100)
 
 ## Start Qt event loop unless running in interactive mode or using pyside.
 if __name__ == '__main__':
