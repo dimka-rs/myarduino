@@ -3,8 +3,8 @@
 
 #define CLK 3
 #define DAT 4
-#define MAX 24
-#define ADD 1
+#define DATABITS 24
+#define CONFBITS 3 //1: A*128, 2: B*32, 3: A*64
 
 
 byte mac[] = {
@@ -15,8 +15,9 @@ IPAddress remoteip(192, 168, 88, 6);
 
 unsigned int remotePort = 8888;
 unsigned int localPort  = 8888;
-char  Reply[] = "12345678901234567890";
-unsigned long weight = 0;
+char  Reply[] = "1234567890s1234567890";
+signed long weight = 0;
+char sign = '+';
 
 EthernetUDP Udp;
 
@@ -33,21 +34,26 @@ void setup() {
 void loop() {
   if (digitalRead(DAT) == 0) {
     weight = 0;
-    for (int i=0; i < MAX; i++){
+    sign = '+';
+    for (int i=0; i < DATABITS; i++){
       digitalWrite(CLK, HIGH);
       weight = weight << 1;
       digitalWrite(CLK, LOW);
       if (digitalRead(DAT) == 1) {
-        weight = weight + 1;
+        if (i==0) {
+          sign='-';
+        } else {
+          weight = weight + 1;
+          }
         }
       }
-    for (int i=0;i<ADD;i++) {
+    for (int i=0;i<CONFBITS;i++) {
       digitalWrite(CLK, HIGH);
       digitalWrite(CLK, LOW);
       }
 
   
-    sprintf(Reply, "%010lu%010lu", millis(), weight);
+    sprintf(Reply, "%010lu%c%010lu", millis(), sign, weight);
     Udp.beginPacket(remoteip, remotePort);
     Udp.write(Reply);
     Udp.endPacket();
