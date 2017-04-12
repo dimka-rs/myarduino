@@ -16,7 +16,7 @@ wmax=0
 while True:
     data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
     m=int(data[0:9])
-    w=int(data[10:19])
+    w=int(data[10:20])
     if w < wmin or wmin == 0:
         wmin = w
     if w > wmax or wmax == 0:

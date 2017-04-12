@@ -37,10 +37,18 @@ wmax = p.plot(pen='r')
 
 
 def recv():
-    global x, y, mn, av1, av2, mx
+    global x, y, mn, mx, av1, av2
     data, addr  = sock.recvfrom(1024) # buffer size is 1024 bytes
     m=int(data[0:9])
-    w=int(data[10:19])
+    w=int(data[10:20])
+    if len(x) > 0 and m < x[-1]:
+        print("reset data! arduino has been restarted!")
+        x=[]
+        y=[]
+        mn=[]
+        mx=[]
+        av1=[]
+        av2=[]
     x=np.append(x, m)
     y=np.append(y, w)
     av1d=10
@@ -60,7 +68,7 @@ def recv():
             if y[i] > mxt:
                 mxt=y[i]
 
-        av1t=round(av1t/av1d)
+        av1t=round((av1t-mnt-mxt)/(av1d-2))
         av1=np.append(av1, av1t)
         mn=np.append(mn, mnt)
         mx=np.append(mx, mxt)
@@ -90,7 +98,7 @@ def recv():
 
 tmr = QtCore.QTimer()
 tmr.timeout.connect(recv)
-tmr.start(100)
+tmr.start(20)
 
 ## Start Qt event loop unless running in interactive mode or using pyside.
 if __name__ == '__main__':
