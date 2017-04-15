@@ -4,6 +4,7 @@
 #define CLK 3
 #define DAT 4
 #define DATABITS 24
+#define MAXVAL 8388607 //0x7FFFFF - max pos value for 24 bits signed
 #define CONFBITS 3 //1: A*128, 2: B*32, 3: A*64
 
 
@@ -15,8 +16,10 @@ IPAddress remoteip(192, 168, 88, 6);
 
 unsigned int remotePort = 8888;
 unsigned int localPort  = 8888;
+unsigned int cycle  = 0;
 char  Reply[] = "1234567890s1234567890";
 signed long weight = 0;
+signed long result = 0;
 char sign = '+';
 
 EthernetUDP Udp;
@@ -51,12 +54,20 @@ void loop() {
       digitalWrite(CLK, HIGH);
       digitalWrite(CLK, LOW);
       }
-
-  
-    sprintf(Reply, "%010lu%c%010lu", millis(), sign, weight);
-    Udp.beginPacket(remoteip, remotePort);
-    Udp.write(Reply);
-    Udp.endPacket();
+    if (sign == '-') {
+      weight = MAXVAL - weight;
+    }
+    // averaging by 8
+    result = result + weight;
+    cycle++;
+    if (cycle >= 8) {
+      cycle = 0;
+      result = result / 8;
+      sprintf(Reply, "%010lu%c%010lu", millis(), sign, result);
+      Udp.beginPacket(remoteip, remotePort);
+      Udp.write(Reply);
+      Udp.endPacket();
+    }
   }
 }
 

@@ -24,11 +24,11 @@ app = QtGui.QApplication([])
 #mw = QtGui.QMainWindow()
 #mw.resize(800,800)
 
-win = pg.GraphicsWindow(title="Basic plotting examples")
+win = pg.GraphicsWindow(title="UDP reader")
 win.resize(1000,600)
-win.setWindowTitle('pyqtgraph example: Plotting')
+win.setWindowTitle('pyqtgraph app')
 pg.setConfigOptions(antialias=True)
-p = win.addPlot(title="Updating plot")
+p = win.addPlot(title="Weight readings")
 wraw = p.plot(pen='b')
 wmin = p.plot(pen='g')
 wav1 = p.plot(pen='y')
@@ -50,6 +50,8 @@ def recv():
         av1=[]
         av2=[]
     x=np.append(x, m)
+    ## scaling
+    w=(w+450)/1.2528
     y=np.append(y, w)
     av1d=10
     av2d=100
