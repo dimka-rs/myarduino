@@ -39,8 +39,8 @@ wmax = p.plot(pen='r')
 def recv():
     global x, y, mn, mx, av1, av2
     data, addr  = sock.recvfrom(1024) # buffer size is 1024 bytes
-    m=int(data[0:9])
-    w=int(data[10:20])
+    m=int(data[0:10])
+    w=int(data[10:22])
     if len(x) > 0 and m < x[-1]:
         print("reset data! arduino has been restarted!")
         x=[]
@@ -51,7 +51,7 @@ def recv():
         av2=[]
     x=np.append(x, m)
     ## scaling
-    w=(w+450)/1.2528
+    w=(w+450)/12.528
     y=np.append(y, w)
     av1d=10
     av2d=100
