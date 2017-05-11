@@ -37,21 +37,21 @@ void loop() {
   x1 = analogRead(x1in);
   x2 = analogRead(x2in);
   x3 = analogRead(x3in);
-  if (x0 > 550 and x0p < 245) {x0p += 10;}
-  if (x0 < 450 and x0p > 0) {x0p -= 10;}
-  if (x1 > 550 and x1p < 245) {x1p += 10;}
-  if (x1 < 450 and x1p > 0) {x1p -= 10;}
-  if (x2 > 550 and x2p < 245) {x2p += 10;}
-  if (x2 < 450 and x2p > 0) {x2p -= 10;}
-  if (x3 > 550 and x3p < 245) {x3p += 10;}
-  if (x3 < 450 and x3p > 0) {x3p -= 10;}
-  analogWrite(x0out, x0p);
-  analogWrite(x1out, x1p);
-  analogWrite(x2out, x2p);
-  analogWrite(x3out, x3p);
-  Serial.print(x0p); Serial.print("\t");
-  Serial.print(x1p); Serial.print("\t");
-  Serial.print(x2p); Serial.print("\t");
-  Serial.print(x3p); Serial.print("\n");
+  //if (x0 > 550 and x0p < 245) {x0p += 10;}
+  //if (x0 < 450 and x0p > 0) {x0p -= 10;}
+  //if (x1 > 550 and x1p < 245) {x1p += 10;}
+  //if (x1 < 450 and x1p > 0) {x1p -= 10;}
+  //if (x2 > 550 and x2p < 245) {x2p += 10;}
+  //if (x2 < 450 and x2p > 0) {x2p -= 10;}
+  //if (x3 > 550 and x3p < 245) {x3p += 10;}
+  //if (x3 < 450 and x3p > 0) {x3p -= 10;}
+  analogWrite(x0out, x0/4);
+  analogWrite(x1out, x1/4);
+  analogWrite(x2out, x2/4);
+  analogWrite(x3out, x3/4);
+  Serial.print(x0); Serial.print("\t");
+  Serial.print(x1); Serial.print("\t");
+  Serial.print(x2); Serial.print("\t");
+  Serial.print(x3); Serial.print("\n");
   delay(100);
 }
