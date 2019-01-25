@@ -147,12 +147,7 @@ unsigned long testText(uint8_t num) {
   tft.println("Hello World!");
   tft.setTextColor(ILI9341_YELLOW); tft.setTextSize(2);
   tft.println(1234.56);
-  tft.setTextColor(ILI9341_RED);    tft.setTextSize(3);
-  tft.println(0xDEADBEEF, HEX);
-  tft.println();
-  tft.setTextColor(ILI9341_GREEN);
-  tft.setTextSize(5);
-  tft.println(num);
+  tft.setTextColor(ILI9341_GREEN);    tft.setTextSize(3);
   tft.setTextSize(2);
   tft.println("I implore thee,");
   tft.setTextSize(1);
