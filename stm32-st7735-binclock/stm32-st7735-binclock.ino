@@ -21,6 +21,7 @@ Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC, TFT_RST); // Use
 uint8_t digits[] = {2,3,5,9,5,1}; //start value
 uint8_t dig_max[] = {2,4,3,4,3,4}; //number of bits 
 int w, h;
+char init_time[] = __TIME__;
 
 void setup() {
   Serial.begin(115200);
@@ -28,11 +29,17 @@ void setup() {
   tft.setRotation(1);
   w = tft.width();
   h = tft.height();
+  //kinda stupid, but works...
+  digits[0] = init_time[0]-'0';
+  digits[1] = init_time[1]-'0';
+  digits[2] = init_time[3]-'0';
+  digits[3] = init_time[4]-'0';
+  digits[4] = init_time[6]-'0';
+  digits[5] = init_time[7]-'0';
 }
 
 
 void loop(void) {
-  
   //time in text
   tft.fillScreen(ILI9341_BLACK);
   tft.setCursor(TEXT_X, TEXT_Y);
